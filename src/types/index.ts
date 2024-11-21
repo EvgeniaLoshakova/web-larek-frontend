@@ -4,6 +4,7 @@ export type ProductCategory =
 	| 'дополнительное'
 	| 'кнопка'
 	| 'хард-скил';
+
 export type FormErrors = Partial<Record<keyof IOrderData, string>>;
 
 // Интерфейс главной страницы магазина

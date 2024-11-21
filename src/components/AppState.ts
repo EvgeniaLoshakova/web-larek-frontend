@@ -38,8 +38,8 @@ export class AppState extends Model<IAppState> {
 	};
 
 	// Метод добавления товара в корзину
-	addToBasket(item: Product) {
-		this.basket.push(item);
+	addToBasket(value: Product) {
+		this.basket.push(value);
 	}
 
 	// Метод удаления товара из корзины
@@ -66,7 +66,7 @@ export class AppState extends Model<IAppState> {
 	setOrderField(field: keyof IOrderForm, value: string) {
 		this.orderData[field] = value;
 
-		if (this.validateAddressForm()) {
+		if (this.validateContactsForm()) {
 			this.events.emit('contacts:ready', this.orderData);
 		}
 		if (this.validateAddressForm()) {
@@ -78,13 +78,13 @@ export class AppState extends Model<IAppState> {
 	validateAddressForm() {
 		const errors: typeof this.formErrors = {};
 		if (!this.orderData.address) {
-			errors.address = 'Необходимо указать адрес';
+			errors.address = 'Необходимо заполнить адрес';
 		}
 		if (!this.orderData.paymentMethod) {
 			errors.paymentMethod = 'Необходимо выбрать способ оплаты';
 		}
 		this.formErrors = errors;
-		this.events.emit('addressformErrors:change', this.formErrors);
+		this.events.emit('orderformErrors:change', this.formErrors);
 		return Object.keys(errors).length === 0;
 	}
 
@@ -92,10 +92,10 @@ export class AppState extends Model<IAppState> {
 	validateContactsForm() {
 		const errors: typeof this.formErrors = {};
 		if (!this.orderData.email) {
-			errors.email = 'Необходимо указать email';
+			errors.email = 'Необходимо заполнить email';
 		}
 		if (!this.orderData.phone) {
-			errors.phone = 'Необходимо указать телефон';
+			errors.phone = 'Необходимо заполнить телефон';
 		}
 		this.formErrors = errors;
 		this.events.emit('contactsformErrors:change', this.formErrors);
@@ -104,7 +104,7 @@ export class AppState extends Model<IAppState> {
 
 	setCatalog(items: IProductItem[]) {
 		this.catalog = items.map((item) => new Product({ ...item }, this.events));
-		this.emitChanges('items:changed', { store: this.catalog });
+		this.emitChanges('items:changed', { catalog: this.catalog });
 	}
 
 	// Добавление ID товаров в поле items

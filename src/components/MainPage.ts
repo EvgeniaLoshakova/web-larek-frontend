@@ -32,7 +32,7 @@ export class MainPage extends Component<IMainPage> {
 		this._catalog.replaceChildren(...items);
 	}
 
-	// Cеттер для блокироваки прокрутки страницы
+	// Cеттер для блокировки прокрутки страницы
 	set locked(value: boolean) {
 		if (value) {
 			this._wrapper.classList.add('page__wrapper_locked');

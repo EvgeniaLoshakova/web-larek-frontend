@@ -35,7 +35,7 @@ const modal = new Modal(ensureElement<HTMLElement>('#modal-container'), events);
 const basket = new Basket('basket', cloneTemplate(basketTemplate), events);
 const order = new AddressForm('order', cloneTemplate(orderTemplate), events);
 const contacts = new ContactsForm(cloneTemplate(contactsTemplate), events);
-const success = new OrderSuccess(
+const ordersuccess = new OrderSuccess(
 	'order-success',
 	cloneTemplate(successTemplate),
 	{
@@ -55,6 +55,7 @@ api
 	.get('/product')
 	.then((res: ApiResponse) => {
 		appData.setCatalog(res.items as IProductItem[]);
+		console.log('hello1')
 	})
 	.catch((err) => {
 		console.log(err);
@@ -64,8 +65,9 @@ api
 events.on('items:changed', () => {
 	page.catalog = appData.catalog.map((item) => {
 		const product = new CatalogItem(cloneTemplate(cardCatalogTemplate), {
-			onClick: () => events.emit('product:select', item),
+			onClick: () => events.emit('card:select', item),
 		});
+		console.log('hello2')
 		return product.render({
 			id: item.id,
 			title: item.title,
@@ -73,16 +75,21 @@ events.on('items:changed', () => {
 			category: item.category,
 			price: item.price,
 		});
+		
 	});
+	console.log('hello2-2')
 });
 
+console.log('hello3')
 // Открытие карточки товара
-events.on('product:select', (item: Product) => {
+events.on('card:select', (item: Product) => {
+	console.log('hello3')
 	const productPreview = new ProductItemPreview(
 		cloneTemplate(cardPreviewTemplate),
 		{
 			onClick: () => {
-				events.emit('product:toBasket', item);
+				events.emit('card:toBasket', item);
+				console.log('hello3')
 			},
 		}
 	);
@@ -100,7 +107,7 @@ events.on('product:select', (item: Product) => {
 });
 
 // Выбор и добавление товаров в корзину
-events.on('product:toBasket', (item: Product) => {
+events.on('card:toBasket', (item: Product) => {
 	item.selected = true;
 	appData.addToBasket(item);
 	page.counter = appData.getBasketCounter();
@@ -143,7 +150,7 @@ events.on('basket:delete', (item: Product) => {
 });
 
 //  Форма заполнения адреса
-events.on('order:address', () => {
+events.on('basket:order', () => {
 	modal.render({
 		content: order.render({
 			address: '',
@@ -153,20 +160,8 @@ events.on('order:address', () => {
 	});
 });
 
-// Форма заполнения телефона и почты
-events.on('order:contacts', () => {
-	appData.orderData.total = appData.getBasketTotal();
-	appData.setItemsID();
-	modal.render({
-		content: contacts.render({
-			valid: false,
-			errors: [],
-		}),
-	});
-});
-
 // Изменилось состояние валидации формы с адресом и способом оплаты
-events.on('addressFormErrors:change', (errors: Partial<IOrderData>) => {
+events.on('orderFormErrors:change', (errors: Partial<IOrderData>) => {
 	const { paymentMethod, address } = errors;
 	order.valid = !paymentMethod && !address;
 	order.errors = Object.values({ paymentMethod, address })
@@ -191,8 +186,20 @@ events.on(
 	}
 );
 
-// Финальное оформление заказа
+// Форма заказа
 events.on('order:submit', () => {
+	appData.orderData.total = appData.getBasketTotal();
+	appData.setItemsID();
+	modal.render({
+		content: contacts.render({
+			valid: false,
+			errors: [],
+		}),
+	});
+});
+
+// Финальное оформление заказа
+events.on('contacts:submit', () => {
 	api
 		.post('/order', appData.orderData)
 		.then((res) => {
@@ -209,7 +216,7 @@ events.on('order:submit', () => {
 // Экран успеха
 events.on('order:success', (res: ApiListResponse<string>) => {
 	modal.render({
-		content: success.render({
+		content: ordersuccess.render({
 			paymentConfirmation: res.total,
 		}),
 	});
@@ -217,16 +224,17 @@ events.on('order:success', (res: ApiListResponse<string>) => {
 
 // Закрытие модального окна, очистка всех форм и выделений
 events.on('modal:close', () => {
+	page.locked = false;
 	appData.refreshOrderData();
 	appData.refreshSelected();
 });
 
-// Блокируем прокрутку страницы если открыто модальное окно
-events.on('modal:open', () => {
-	page.locked = true;
-});
+// // Блокируем прокрутку страницы если открыто модальное окно
+// events.on('modal:open', () => {
+// 	page.locked = true;
+// });
 
-// Разблокируем прокрутку страницы если заткрыто модальное окно
-events.on('modal:close', () => {
-	page.locked = false;
-});
+// // Разблокируем прокрутку страницы если заткрыто модальное окно
+// events.on('modal:close', () => {
+// 	page.locked = false;
+// });
