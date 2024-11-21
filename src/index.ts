@@ -61,7 +61,7 @@ api
 	});
 
 // Отображение элементов каталога
-events.on('items:changed', () => {
+events.on('items:show', () => {
 	page.catalog = appData.catalog.map((item) => {
 		const product = new CatalogItem(cloneTemplate(cardCatalogTemplate), {
 			onClick: () => events.emit('card:select', item),
@@ -73,7 +73,6 @@ events.on('items:changed', () => {
 			category: item.category,
 			price: item.price,
 		});
-		
 	});
 });
 
@@ -155,10 +154,10 @@ events.on('basket:order', () => {
 });
 
 // Изменилось состояние валидации формы с адресом и способом оплаты
-events.on('orderFormErrors:change', (errors: Partial<IOrderForm>) => {
-	const { paymentMethod, address } = errors;
-	order.valid = !paymentMethod && !address;
-	order.errors = Object.values({ paymentMethod, address })
+events.on('addressFormErrors:change', (errors: Partial<IOrderForm>) => {
+	const { payment, address } = errors;
+	order.valid = !payment && !address;
+	order.errors = Object.values({ payment, address })
 		.filter((i) => !!i)
 		.join('; ');
 });
@@ -192,7 +191,7 @@ events.on('order:submit', () => {
 	});
 });
 
-// Финальное оформление заказа
+// Финальное оформление заказа ("Оплатить")
 events.on('contacts:submit', () => {
 	api
 		.post('/order', appData.orderData)
@@ -223,13 +222,3 @@ events.on('modal:close', () => {
 	appData.refreshOrderData();
 	appData.refreshSelected();
 });
-
-// // Блокируем прокрутку страницы если открыто модальное окно
-// events.on('modal:open', () => {
-// 	page.locked = true;
-// });
-
-// // Разблокируем прокрутку страницы если заткрыто модальное окно
-// events.on('modal:close', () => {
-// 	page.locked = false;
-// });

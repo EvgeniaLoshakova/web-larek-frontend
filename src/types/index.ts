@@ -33,7 +33,7 @@ export interface IBasketModel {
 
 // Интерфейс, описывающий полные данные заказа и покупателя
 export interface IOrderData {
-	paymentMethod: string;
+	payment: string;
 	address: string;
 	email: string;
 	phone: string;
@@ -43,7 +43,7 @@ export interface IOrderData {
 
 // Интерфейс, описывающий только данные для заполнения при оформлении заказа
 export interface IOrderForm {
-	paymentMethod: string;
+	payment: string;
 	address: string;
 	email: string;
 	phone: string;
@@ -51,7 +51,7 @@ export interface IOrderForm {
 
 // Интерфейс, описывающий Форму (модальное окно) с адресом покупателя и методом оплаты
 export interface IAddressForm {
-	paymentMethod: string;
+	payment: string;
 	address: string;
 }
 

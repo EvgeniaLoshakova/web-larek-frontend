@@ -1,7 +1,7 @@
 import { Component } from './base/Component';
 import { IEvents } from './base/events';
 import { IProductItem, IBasketModel } from '../types/index';
-import { ensureAllElements} from '../utils/utils';
+import { ensureAllElements } from '../utils/utils';
 
 // Функция, вычисляющая общую стоимость тоаров в корзине
 export function handleTotal(total: number): string {
@@ -61,19 +61,6 @@ export class Basket extends Component<IBasketModel> {
 	// Метод, делающий кнопку "Оформить" неактивной
 	disableButton() {
 		this.setDisabled(this._button, true);
-
-// // Метод для обновления индексов таблички при удалении товара из корзины
-// refreshIndex(data?: Partial<IBasketModel>): HTMLElement {
-//     this._index = ensureAllElements<HTMLSpanElement>('.basket__item-index', this.container);
-
-//     this._index.forEach( (item, index) => {
-//       this.setText(item, String(index+1))
-//     })
-
-//     return super.render(data);
-
-
-
 	}
 }
 

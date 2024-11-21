@@ -49,8 +49,8 @@ export class ContactsForm extends Form<IContactsForm> {
 
 	// Метод для проверки состояния кнопки
 	private checkButtonState() {
-		const isPhoneValid = this._phoneInput?.value.trim() !== '' || false; //Обработка null
-		const isEmailValid = this._emailInput?.value.trim() !== '' || false; //Обработка null
-		this._submitbutton.disabled = !(isPhoneValid && isEmailValid); //Обработка null
+		const isPhoneValid = this._phoneInput?.value.trim() !== '' || false; 
+		const isEmailValid = this._emailInput?.value.trim() !== '' || false; 
+		this._submitbutton.disabled = !(isPhoneValid && isEmailValid); 
 	}
 }

@@ -29,7 +29,7 @@ export class AppState extends Model<IAppState> {
 
 	// заказанный товар
 	orderData: IOrderData = {
-		paymentMethod: '',
+		payment: '',
 		address: '',
 		email: '',
 		phone: '',
@@ -80,11 +80,11 @@ export class AppState extends Model<IAppState> {
 		if (!this.orderData.address) {
 			errors.address = 'Необходимо заполнить адрес';
 		}
-		if (!this.orderData.paymentMethod) {
-			errors.paymentMethod = 'Необходимо выбрать способ оплаты';
+		if (!this.orderData.payment) {
+			errors.payment = 'Необходимо выбрать способ оплаты';
 		}
 		this.formErrors = errors;
-		this.events.emit('orderformErrors:change', this.formErrors);
+		this.events.emit('addressformErrors:change', this.formErrors);
 		return Object.keys(errors).length === 0;
 	}
 
@@ -104,7 +104,7 @@ export class AppState extends Model<IAppState> {
 
 	setCatalog(items: IProductItem[]) {
 		this.catalog = items.map((item) => new Product({ ...item }, this.events));
-		this.emitChanges('items:changed', { catalog: this.catalog });
+		this.emitChanges('items:show', { catalog: this.catalog });
 	}
 
 	// Добавление ID товаров в поле items
@@ -118,7 +118,7 @@ export class AppState extends Model<IAppState> {
 			address: '',
 			email: '',
 			phone: '',
-			paymentMethod: '',
+			payment: '',
 			items: [],
 			total: null,
 		};
@@ -129,14 +129,15 @@ export class AppState extends Model<IAppState> {
 		this.catalog.forEach((item) => (item.selected = false));
 	}
 
+	// Очистка корзины после оформления заказа
 	refreshBasket() {
 		this.orderData = {
-		  items: [],
-		  total: null,
-		  address: '',
-		  email: '',
-		  phone: '',
-		  paymentMethod: ''
+			items: [],
+			total: null,
+			address: '',
+			email: '',
+			phone: '',
+			payment: '',
 		};
-	  }
+	}
 }
