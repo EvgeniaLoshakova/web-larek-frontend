@@ -161,7 +161,7 @@ yarn build
 - cleanBasket(): void - полностью очистить корзину
 - getBasketCounter(): number - калькулятор количества товаров в корзине
 - getBasketTotal(): number - калькулятор общей стоимости товаров в корзине
-- setOrderField(field: keyof IOrderData, value: string): void - метод для заполнения полей Форм с адресом и контактами
+- setOrderField(field: keyof IOrderForm, value: string): void - метод для заполнения полей Форм с адресом и контактами
 - validateAddressForm(): boolean  - валидация Формы с адресом покупателя и методом оплаты
 - validateContactsForm(): boolean - валидация Формы с контактами покупателя
 

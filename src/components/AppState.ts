@@ -128,4 +128,15 @@ export class AppState extends Model<IAppState> {
 	refreshSelected() {
 		this.catalog.forEach((item) => (item.selected = false));
 	}
+
+	refreshBasket() {
+		this.orderData = {
+		  items: [],
+		  total: null,
+		  address: '',
+		  email: '',
+		  phone: '',
+		  paymentMethod: ''
+		};
+	  }
 }

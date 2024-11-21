@@ -55,7 +55,6 @@ api
 	.get('/product')
 	.then((res: ApiResponse) => {
 		appData.setCatalog(res.items as IProductItem[]);
-		console.log('hello1')
 	})
 	.catch((err) => {
 		console.log(err);
@@ -67,7 +66,6 @@ events.on('items:changed', () => {
 		const product = new CatalogItem(cloneTemplate(cardCatalogTemplate), {
 			onClick: () => events.emit('card:select', item),
 		});
-		console.log('hello2')
 		return product.render({
 			id: item.id,
 			title: item.title,
@@ -77,19 +75,15 @@ events.on('items:changed', () => {
 		});
 		
 	});
-	console.log('hello2-2')
 });
 
-console.log('hello3')
 // Открытие карточки товара
 events.on('card:select', (item: Product) => {
-	console.log('hello3')
 	const productPreview = new ProductItemPreview(
 		cloneTemplate(cardPreviewTemplate),
 		{
 			onClick: () => {
 				events.emit('card:toBasket', item);
-				console.log('hello3')
 			},
 		}
 	);
@@ -161,7 +155,7 @@ events.on('basket:order', () => {
 });
 
 // Изменилось состояние валидации формы с адресом и способом оплаты
-events.on('orderFormErrors:change', (errors: Partial<IOrderData>) => {
+events.on('orderFormErrors:change', (errors: Partial<IOrderForm>) => {
 	const { paymentMethod, address } = errors;
 	order.valid = !paymentMethod && !address;
 	order.errors = Object.values({ paymentMethod, address })
@@ -170,7 +164,7 @@ events.on('orderFormErrors:change', (errors: Partial<IOrderData>) => {
 });
 
 // Изменилось состояние валидации формы с телефоном и email
-events.on('contactsFormErrors:change', (errors: Partial<IOrderData>) => {
+events.on('contactsFormErrors:change', (errors: Partial<IOrderForm>) => {
 	const { email, phone } = errors;
 	contacts.valid = !email && !phone;
 	contacts.errors = Object.values({ phone, email })
@@ -205,6 +199,7 @@ events.on('contacts:submit', () => {
 		.then((res) => {
 			events.emit('order:success', res);
 			appData.cleanBasket();
+			appData.refreshBasket();
 			order.disableButtons();
 			page.counter = 0;
 		})
