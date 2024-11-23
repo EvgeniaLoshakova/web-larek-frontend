@@ -1,6 +1,5 @@
 import { Component } from './base/Component';
-import { ensureElement } from '../utils/utils';
-import { handleTotal } from './Basket';
+import { ensureElement, handleTotal } from '../utils/utils';
 import { CDN_URL } from '../utils/constants';
 import { ProductCategory, IProductItem } from '../types';
 

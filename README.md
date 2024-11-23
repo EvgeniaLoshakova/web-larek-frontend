@@ -2,6 +2,8 @@
 
 Стек: HTML, SCSS, TS, Webpack
 
+Для просмотра проекта необходимо создать в корневой папке файл .env и указать в нем API_ORIGIN=https://larek-api.nomoreparties.co 
+
 Структура проекта:
 - src/ — исходные файлы проекта
 - src/components/ — папка с JS компонентами

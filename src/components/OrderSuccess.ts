@@ -1,5 +1,5 @@
 import { Component } from './base/Component';
-import { handleTotal } from './Basket';
+import { handleTotal } from '../utils/utils';
 import { IOrderSuccess } from '../types/index';
 
 interface IOrderSuccessActions {

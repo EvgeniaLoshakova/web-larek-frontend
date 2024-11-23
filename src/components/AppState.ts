@@ -7,25 +7,15 @@ import {
 	IOrderForm,
 } from '../types';
 
-export class Product extends Model<IProductItem> {
-	id: string;
-	description?: string;
-	image: string;
-	title: string;
-	category: string;
-	price: number | null;
-	selected: boolean;
-}
-
 // Главная модель данных, обеспечивает работу всего приложения и связь всех компонтентов, управляет корзиной, сбором и проверкой данных для оформления заказа
 export class AppState extends Model<IAppState> {
 	formErrors: FormErrors = {};
 
 	// массив карточек товара на главной странице магазине
-	catalog: Product[];
+	catalog: IProductItem[];
 
 	// массив товаров в корзине
-	basket: Product[] = [];
+	basket: IProductItem[] = [];
 
 	// заказанный товар
 	orderData: IOrderData = {
@@ -38,7 +28,7 @@ export class AppState extends Model<IAppState> {
 	};
 
 	// Метод добавления товара в корзину
-	addToBasket(value: Product) {
+	addToBasket(value: IProductItem) {
 		this.basket.push(value);
 	}
 
@@ -103,8 +93,9 @@ export class AppState extends Model<IAppState> {
 	}
 
 	setCatalog(items: IProductItem[]) {
-		this.catalog = items.map((item) => new Product({ ...item }, this.events));
+		this.catalog = items;
 		this.emitChanges('items:show', { catalog: this.catalog });
+		items.forEach((item) => this.events.emit('itemAdded', item));
 	}
 
 	// Добавление ID товаров в поле items
@@ -127,17 +118,5 @@ export class AppState extends Model<IAppState> {
 	// Очистка данных о выбранных товарах
 	refreshSelected() {
 		this.catalog.forEach((item) => (item.selected = false));
-	}
-
-	// Очистка корзины после оформления заказа
-	refreshBasket() {
-		this.orderData = {
-			items: [],
-			total: null,
-			address: '',
-			email: '',
-			phone: '',
-			payment: '',
-		};
 	}
 }

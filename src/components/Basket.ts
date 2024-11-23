@@ -1,20 +1,7 @@
 import { Component } from './base/Component';
 import { IEvents } from './base/events';
 import { IProductItem, IBasketModel } from '../types/index';
-import { ensureAllElements } from '../utils/utils';
-
-// Функция, вычисляющая общую стоимость тоаров в корзине
-export function handleTotal(total: number): string {
-	const totalStr = total.toString();
-	return totalStr.length < 5
-		? totalStr
-		: totalStr
-				.split('')
-				.reverse()
-				.map((s, i) => ((i + 1) % 3 === 0 ? ' ' + s : s))
-				.reverse()
-				.join('');
-}
+import { handleTotal } from '../utils/utils';
 
 // Класс, отвечающий за работу корзины, обеспечивает отображение выбранных товаров в заказе и их общей стоимостю
 export class Basket extends Component<IBasketModel> {

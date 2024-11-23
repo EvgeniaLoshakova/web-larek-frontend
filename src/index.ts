@@ -9,7 +9,7 @@ import { ApiResponse, IOrderData, IProductItem, IOrderForm } from './types';
 import { Modal } from './components/common/Modal';
 
 import { AddressForm } from './components/AddressForm';
-import { Product, AppState } from './components/AppState';
+import { AppState } from './components/AppState';
 import { Basket, SelectedProductItem } from './components/Basket';
 import { ContactsForm } from './components/ContactsForm';
 import { MainPage } from './components/MainPage';
@@ -77,7 +77,7 @@ events.on('items:show', () => {
 });
 
 // Открытие карточки товара
-events.on('card:select', (item: Product) => {
+events.on('card:select', (item: IProductItem) => {
 	const productPreview = new ProductItemPreview(
 		cloneTemplate(cardPreviewTemplate),
 		{
@@ -100,7 +100,7 @@ events.on('card:select', (item: Product) => {
 });
 
 // Выбор и добавление товаров в корзину
-events.on('card:toBasket', (item: Product) => {
+events.on('card:toBasket', (item: IProductItem) => {
 	item.selected = true;
 	appData.addToBasket(item);
 	page.counter = appData.getBasketCounter();
@@ -132,7 +132,7 @@ events.on('basket:open', () => {
 });
 
 // Редактирование (удаление) товаров в корзине
-events.on('basket:delete', (item: Product) => {
+events.on('basket:delete', (item: IProductItem) => {
 	appData.deleteFromBasket(item.id);
 	item.selected = false;
 	page.counter = appData.getBasketCounter();
@@ -198,7 +198,7 @@ events.on('contacts:submit', () => {
 		.then((res) => {
 			events.emit('order:success', res);
 			appData.cleanBasket();
-			appData.refreshBasket();
+			appData.refreshOrderData();
 			order.disableButtons();
 			page.counter = 0;
 		})
@@ -219,6 +219,5 @@ events.on('order:success', (res: ApiListResponse<string>) => {
 // Закрытие модального окна, очистка всех форм и выделений
 events.on('modal:close', () => {
 	page.locked = false;
-	appData.refreshOrderData();
 	appData.refreshSelected();
 });
